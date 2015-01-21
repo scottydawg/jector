@@ -40,7 +40,7 @@ console.log(context.namespace) # output 'myNamespace'
 
 ### Singletons
 
-`singleton(dependencyName, constructorMethod)`
+`context.singleton(dependencyName, constructorMethod)`
 
 `singleton()` declares a named Singleton. The constructorMethod (which may be a
     class constructor or any other function) is invoked the first time the
@@ -85,7 +85,7 @@ console.log(frame.slab is slab); # output 'true'
 
 ### Factories
 
-`factory(dependencyName, factoryMethod)`
+`context.factory(dependencyName, factoryMethod)`
 
 `factory()` declares a factory method that will be invoked any time the named
     dependency is requested.
@@ -131,7 +131,7 @@ console.log(frame1.slab is frame2.slab) # output 'true'
 
 ### Values
 
-`value(dependencyName, instance)`
+`context.value(dependencyName, instance)`
 
 `value()` registers an existing instance as a named dependency for injection.
 
