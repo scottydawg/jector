@@ -18,7 +18,7 @@ Jector is designed to work along side your existing classes and module
 
 ### Context Creation
 
-`context(namespace)`
+`jector.context(namespace)`
 
 Create a new injection context by providing a namespace. If the namespace has
     already been declared, the existing context is returned.
