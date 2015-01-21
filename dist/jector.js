@@ -92,6 +92,11 @@
       return this;
     };
 
+    Context.prototype.value = function(name, instance) {
+      this._assertNameAvailability(name);
+      return this.singletons[name] = instance;
+    };
+
     Context.prototype.get = function(name) {
       return this._get(name);
     };

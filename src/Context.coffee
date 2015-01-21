@@ -50,6 +50,10 @@ class Context
       delete @pending[name]
     return @
 
+  value: (name, instance) ->
+    @_assertNameAvailability(name)
+    return @singletons[name] = instance
+
   get: (name) ->
     return @_get(name)
 
