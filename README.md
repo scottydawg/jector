@@ -1,2 +1,3 @@
 # jector
-Simple, unobtrusive dependency injection for Node
+Simple, unobtrusive dependency injection.
+
