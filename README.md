@@ -34,7 +34,7 @@ CoffeeScript:
 ```coffeescript
 jector = require('jector')
 context = jector.context('myNamespace')
-console.log(context.namespace) // output 'myNamespace'
+console.log(context.namespace) # output 'myNamespace'
 ```
 
 
