@@ -163,6 +163,52 @@ describe 'Context', ->
       expect(minSafe.truss instanceof Slab).toBe(true)
       expect(minSafe.roof instanceof Frame).toBe(true)
 
+  describe 'value', ->
+
+    instance = {}
+
+    beforeEach ->
+      instance = new Frame({id: 'mockSlab'})
+
+    it 'returns the value provided', ->
+      value = context.value('frame', instance)
+      expect(value).toBe(instance)
+
+    it 'performs no injection', ->
+      context.singleton('slab', Slab)
+      value = context.value('frame', instance)
+      expect(value.slab.id).toBe('mockSlab')
+
+    it 'provides declared value as a dependency', ->
+      slab = new Slab()
+      context.value('slab', slab)
+      frameFn = context.factory('frame', Frame)
+      frame1 = frameFn()
+      frame2 = frameFn()
+      expect(frame1.slab).toBe(slab)
+      expect(frame2.slab).toBe(slab)
+      expect(frame2).not.toBe(frame1)
+
+    it 'throws when a value name is already in use', ->
+      context.value('slab', Slab)
+      expect(-> context.value('slab', Slab))
+        .toThrow("Dependency name 'slab' was already used")
+
+    it 'throws when a value name is already a singleton name (and instantiation is pending)', ->
+      context.singleton('slab', Slab)
+      expect(-> context.value('slab', Slab))
+        .toThrow("Dependency name 'slab' was already used")
+
+    it 'throws when a value name is already a singleton name (and instantiation has occurred)', ->
+      context.singleton('slab', Slab)()
+      expect(-> context.value('slab', Slab))
+        .toThrow("Dependency name 'slab' was already used")
+
+    it 'throws when a value name is already a factory name', ->
+      context.factory('slab', Slab)
+      expect(-> context.value('slab', Slab))
+        .toThrow("Dependency name 'slab' was already used")
+
   describe 'get', ->
 
     it 'returns nothing if named instance does not exist', ->
@@ -181,6 +227,11 @@ describe 'Context', ->
       slab1 = context.get('slab')
       slab2 = context.get('slab')
       expect(slab2).not.toBe(slab1)
+
+    it 'returns a value when requested', ->
+      rock = new Rock({})
+      context.value('rock', rock)
+      expect(context.get('rock')).toBe(rock)
 
 
 class Slab
