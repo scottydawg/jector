@@ -7,6 +7,7 @@
       this.pending = {};
       this.singletons = {};
       this.factories = {};
+      this.dependees = {};
     }
 
     Context.prototype.factory = function(name, fn) {
@@ -47,6 +48,7 @@
       return argNames.map((function(_this) {
         return function(argName) {
           var instance;
+          _this._dependsOn(argName, name);
           if ((instance = _this._get(argName, depChain)) != null) {
             return instance;
           } else {
@@ -54,6 +56,13 @@
           }
         };
       })(this));
+    };
+
+    Context.prototype._dependsOn = function(dependee, dependant) {
+      if (this.dependees[dependee] == null) {
+        this.dependees[dependee] = {};
+      }
+      return this.dependees[dependee][dependant] = true;
     };
 
     Context.prototype.singleton = function(name, type) {
@@ -113,6 +122,23 @@
         return processor(depChain);
       }
       return this.singletons[name];
+    };
+
+    Context.prototype.dependants = function(name) {
+      var key, processor, value;
+      if ((processor = this.pending[name]) != null) {
+        processor();
+      }
+      return (function() {
+        var _ref, _results;
+        _ref = this.dependees[name];
+        _results = [];
+        for (key in _ref) {
+          value = _ref[key];
+          _results.push(key);
+        }
+        return _results;
+      }).call(this);
     };
 
     return Context;
