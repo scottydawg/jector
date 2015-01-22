@@ -4,6 +4,7 @@ class Context
     @pending = {}
     @singletons = {}
     @factories = {}
+    @dependees = {}
 
   factory: (name, fn) ->
     @_assertNameAvailability(name)
@@ -27,9 +28,15 @@ class Context
   _argsForFn: (name, fn, depChain) ->
     argNames = fn._needs ? getArgNames(fn)
     return argNames.map (argName) =>
+      @_dependsOn(argName, name)
       if (instance = @_get(argName, depChain))?
         return instance
       else throw unfulfilledDependencyError(argName)
+
+  _dependsOn: (dependee, dependant) ->
+    unless @dependees[dependee]?
+      @dependees[dependee] = {}
+    @dependees[dependee][dependant] = true
 
   singleton: (name, type) ->
     @_assertNameAvailability(name)
@@ -65,4 +72,9 @@ class Context
       return processor(depChain)
 
     return @singletons[name]
+
+  dependants: (name) ->
+    if (processor = @pending[name])?
+      processor()
+    return (key for key, value of @dependees[name])
 

@@ -233,6 +233,27 @@ describe 'Context', ->
       context.value('rock', rock)
       expect(context.get('rock')).toBe(rock)
 
+  describe 'dependants', ->
+
+    it 'returns the list of dependency names for the named instance', ->
+      context.value('slab', Slab)
+      context.singleton('frame', Frame)
+      context.factory('truss', Truss)
+      context.factory('roof', Roof)()
+
+      expect(context.dependants('roof')).toEqual([])
+      expect(context.dependants('truss')).toContain('roof')
+      expect(context.dependants('frame')).toContain('roof', 'truss')
+      expect(context.dependants('slab')).toContain('roof', 'frame', 'truss')
+
+    it 'is empty if the named dependency does not exist', ->
+      expect(context.dependants('bogus')).toEqual([])
+
+    it 'is empty if the named dependency has not been instantiated', ->
+      context.singleton('slab', Slab)
+      context.singleton('frame', Frame)
+      expect(context.dependants('frame')).toEqual([])
+
 
 class Slab
   constructor: () ->
