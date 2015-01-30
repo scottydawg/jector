@@ -2,8 +2,29 @@
   "name": "jector",
   "description": "Simple, unobtrusive dependency injection",
   "version": "0.1.0",
-  "private": false,
+  "author": "Scott Delamater",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/scottydawg/jector.git"
+  },
+  "bugs": {
+    "url": "http://github.com/scottydawg/jector/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT"
+    }
+  ],
   "main": "dist/jector.js",
+  "scripts": {
+    "test": "grunt test",
+    "prepublish": "grunt build"
+  },
+  "keywords": ["injection", "di", "ioc", "dependencies", "dependency", "context"],
+  "engines": {
+    "node": ">= 0.8.0"
+  },
   "dependencies": {
     "lodash": "~2.4.1"
   },
